@@ -6,7 +6,11 @@ import pg from 'pg';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+    // Construire DATABASE_URL depuis les variables séparées si disponibles
+    const dbUrl = process.env.DATABASE_URL ||
+      `postgresql://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD || '')}@${process.env.DB_HOST}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'postgres'}`;
+
+    const pool = new pg.Pool({ connectionString: dbUrl });
     const adapter = new PrismaPg(pool);
     super({ adapter });
   }
