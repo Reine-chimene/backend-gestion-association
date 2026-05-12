@@ -19,6 +19,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://localhost:3000',
+      'https://gestionassociations.netlify.app',
       /\.netlify\.app$/,
       process.env.FRONTEND_URL || '',
     ].filter(Boolean),
