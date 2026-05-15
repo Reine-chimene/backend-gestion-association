@@ -10,7 +10,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const dbUrl = process.env.DATABASE_URL ||
       `postgresql://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD || '')}@${process.env.DB_HOST}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || 'postgres'}`;
 
-    const pool = new pg.Pool({ connectionString: dbUrl });
+    // Forcer IPv4 en utilisant le pool pg avec family: 4
+    const pool = new pg.Pool({
+      connectionString: dbUrl,
+      ssl: { rejectUnauthorized: false },
+      family: 4, // Force IPv4 - évite ENETUNREACH sur Railway
+    });
     const adapter = new PrismaPg(pool);
     super({ adapter });
   }
